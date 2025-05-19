@@ -129,4 +129,29 @@
             </t>
         </xpath>
     </template>
+    
+    <template id="match_question" inherit_id="survey.question">
+        <xpath expr="//div[hasclass('o_survey_form_content')]" position="inside">
+            <div t-if="question.question_type == 'match'" class="match_question_container"
+                 t-att-id="'match_question_%s' % question.id"
+                 t-att-data-question-id="question.id">
+
+                <div class="row match-header">
+                    <div class="col-md-5"><strong>Items</strong></div>
+                    <div class="col-md-2 text-center"><strong>Match</strong></div>
+                    <div class="col-md-5"><strong>Options</strong></div>
+                </div>
+                
+                <div class="match-pairs-container" t-att-data-question-id="question.id">
+                    <!-- Will be populated by JS -->
+                </div>
+                
+                <!-- Hidden input to store the results -->
+                <input type="hidden" 
+                       t-att-name="'match_result_%s' % question.id"
+                       t-att-id="'match_result_%s' % question.id" 
+                       class="form-control match_result"/>
+            </div>
+        </xpath>
+    </template>
 </odoo>

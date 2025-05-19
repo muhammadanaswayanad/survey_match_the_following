@@ -22,4 +22,15 @@
             </xpath>
         </field>
     </record>
+    <!-- Extend the form view to show match details in survey analysis -->
+    <record id="survey_survey_view_form_match" model="ir.ui.view">
+        <field name="name">survey.survey.view.form.match</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='question_ids']/tree/field[@name='question_type']" position="attributes">
+                <attribute name="decoration-info" add="question_type == 'match'"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>

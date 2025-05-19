@@ -6,10 +6,19 @@
     background-color: #f9f9f9;
 }
 
+.match-question-container {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
 .match-header {
     margin-bottom: 15px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #ddd;
+    border-bottom: 1px solid #dee2e6;
+    font-weight: bold;
 }
 
 .match-item-content {
@@ -31,6 +40,15 @@
 
 .match-pair-row {
     align-items: center;
+    padding: 8px 0;
+}
+
+.match-left-option {
+    font-weight: 500;
+}
+
+.match-pair-select {
+    width: 100%;
 }
 
 /* Results page styling */
@@ -112,4 +130,9 @@
 
 .o_survey_match_clear_btn {
     margin-top: 1rem;
+}
+
+/* When a match is made, show a connecting line or highlight */
+.match-pair-selected {
+    background-color: #e9ecef;
 }
