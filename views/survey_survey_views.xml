@@ -1,38 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Remove the problematic record that references non-existent survey.survey_question_form_edit -->
-    
-    <!-- Add a template for the frontend rendering of match questions -->
-    <template id="question_match_template" inherit_id="survey.question">
-        <xpath expr="//div[hasclass('js_question-wrapper')]" position="attributes">
-            <attribute name="t-att-data-question-type">question.question_type</attribute>
-        </xpath>
-        
-        <xpath expr="//div[hasclass('js_question-wrapper')]/div" position="inside">
+    <!-- Inherit from the proper question template in Odoo 17 -->
+    <template id="question_match_template" inherit_id="survey.question_common">
+        <xpath expr="//div[hasclass('o_survey_question_content')]" position="inside">
             <t t-if="question.question_type == 'match'">
-                <div class="match_question_container" t-att-data-question-id="question.id">
+                <div class="match_question_container mt-3" t-att-data-question-id="question.id">
                     <div class="match-pairs-container">
                         <!-- The pairs will be dynamically populated by JavaScript -->
                     </div>
-                    <input type="hidden" name="match_result" class="match_result" />
+                    <input type="hidden" name="match_result" class="match_result"/>
                 </div>
             </t>
         </xpath>
     </template>
     
-    <!-- Add a survey result template for displaying match question answers -->
-    <template id="match_question_result" inherit_id="survey.survey_fill_form_done">
-        <xpath expr="//div[hasclass('o_survey_form_content')]" position="inside">
-            <t t-call="survey_match_the_following.question_match_result"/>
+    <!-- Also provide a template for displaying results -->
+    <template id="question_match_result" inherit_id="survey.question_result">
+        <xpath expr="//t[@t-if='question.question_type in [\"textbox\", \"char_box\"]']" position="after">
+            <t t-if="question.question_type == 'match'">
+                <div class="match_question_result_container" t-att-data-question-id="question.id">
+                    <!-- Result display logic will be added here -->
+                </div>
+            </t>
         </xpath>
-    </template>
-    
-    <template id="question_match_result">
-        <t t-foreach="survey.question_ids.filtered(lambda q: q.question_type == 'match')" t-as="question">
-            <!-- This will be implemented for showing match question results -->
-            <div class="match_question_result_container" t-att-data-question-id="question.id">
-                <!-- Result display will be handled separately -->
-            </div>
-        </t>
     </template>
 </odoo>
