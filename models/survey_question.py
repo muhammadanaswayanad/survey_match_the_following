@@ -6,7 +6,7 @@ class SurveyQuestion(models.Model):
 
     question_type = fields.Selection(
         selection_add=[('match', 'Match the Following')],
-        ondelete={'match': 'set default'}
+        ondelete={'match': 'cascade'}  # Changed from 'set default' to 'cascade'
     )
     match_pair_ids = fields.One2many(
         'survey.match.pair',

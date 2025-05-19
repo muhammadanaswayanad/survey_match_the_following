@@ -6,8 +6,8 @@
         <field name="inherit_id" ref="survey.survey_question_form"/>
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
-                <page string="Match Pairs" name="match_pairs_page">
-                    <field name="match_pair_ids" invisible="question_type != 'match'">
+                <page string="Match Pairs" name="match_pairs_page" invisible="question_type != 'match'">
+                    <field name="match_pair_ids">
                         <tree editable="bottom">
                             <field name="left_option"/>
                             <field name="right_option"/>
@@ -18,10 +18,6 @@
             <!-- Add match question type to the selection field -->
             <xpath expr="//field[@name='question_type']" position="attributes">
                 <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
-            </xpath>
-            <!-- Add visibility rule for match settings page -->
-            <xpath expr="//page[@name='match_pairs_page']" position="attributes">
-                <attribute name="invisible">question_type != 'match'</attribute>
             </xpath>
         </field>
     </record>
