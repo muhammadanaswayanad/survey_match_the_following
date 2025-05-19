@@ -26,27 +26,42 @@ publicWidget.registry.SurveyMatchQuestion = publicWidget.Widget.extend({
      * Initialize the matching question UI
      */
     _initializeMatchQuestion: function () {
-        var questionId = this.$el.data('question-id');
+        const questionId = this.$el.data('question-id');
+        
+        if (!questionId) {
+            console.warn('Question ID not found for match question');
+            return;
+        }
         
         // Fetch the match pairs for this question
         this._rpc({
             model: 'survey.question',
             method: 'read',
             args: [[questionId], ['match_pair_ids']],
-        }).then(function (result) {
-            if (result && result.length) {
-                var matchPairIds = result[0].match_pair_ids;
+        }).then(result => {
+            if (result && result.length && result[0].match_pair_ids && result[0].match_pair_ids.length) {
+                const matchPairIds = result[0].match_pair_ids;
                 
                 // Fetch the match pair details
                 this._rpc({
                     model: 'survey.match.pair',
                     method: 'read',
                     args: [matchPairIds, ['left_option', 'right_option']],
-                }).then(function (pairs) {
-                    this._renderMatchPairs(questionId, pairs);
-                }.bind(this));
+                }).then(pairs => {
+                    if (pairs && pairs.length) {
+                        this._renderMatchPairs(questionId, pairs);
+                    } else {
+                        console.warn('No match pairs found for question', questionId);
+                    }
+                }).catch(error => {
+                    console.error('Error fetching match pairs:', error);
+                });
+            } else {
+                console.warn('No match_pair_ids found for question', questionId);
             }
-        }.bind(this));
+        }).catch(error => {
+            console.error('Error fetching question details:', error);
+        });
     },
 
     /**
