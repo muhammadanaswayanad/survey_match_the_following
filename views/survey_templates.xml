@@ -87,4 +87,46 @@
             </t>
         </xpath>
     </template>
+    
+    <!-- Add Match the Following question type to survey templates -->
+    <template id="match_question" name="Match The Following Question">
+        <div class="o_survey_match_question" t-att-data-question-id="question.id" t-att-data-required="question.constr_mandatory">
+            <div class="o_survey_match_container">
+                <div class="o_survey_match_left_column">
+                    <h6>Items</h6>
+                    <t t-foreach="question.match_pair_ids" t-as="pair">
+                        <div class="o_survey_match_left_item" t-att-data-option-id="pair.id">
+                            <span t-field="pair.left_option"/>
+                        </div>
+                    </t>
+                </div>
+                <div class="o_survey_match_middle_column">
+                    <!-- Spacer column for connections -->
+                </div>
+                <div class="o_survey_match_right_column">
+                    <h6>Matches</h6>
+                    <!-- Randomize right options for better challenge -->
+                    <t t-foreach="question.match_pair_ids.sorted(lambda p: random.random())" t-as="pair">
+                        <div class="o_survey_match_right_item" t-att-data-option-id="pair.id">
+                            <span t-field="pair.right_option"/>
+                        </div>
+                    </t>
+                </div>
+                <div class="o_survey_match_connections"></div>
+            </div>
+            <button type="button" class="btn btn-sm btn-secondary o_survey_match_clear_btn">Clear Matches</button>
+            
+            <!-- Hidden input to store the match data -->
+            <input type="hidden" t-att-name="'question_%s' % question.id" t-att-value="user_input_line.value_match_pairs if user_input_line else ''"/>
+        </div>
+    </template>
+    
+    <!-- Extend the survey question template -->
+    <template id="survey_question_match" inherit_id="survey.question">
+        <xpath expr="//div[hasclass('o_survey_form_content')]" position="inside">
+            <t t-if="question.question_type == 'match'">
+                <t t-call="survey_match_the_following.match_question"/>
+            </t>
+        </xpath>
+    </template>
 </odoo>

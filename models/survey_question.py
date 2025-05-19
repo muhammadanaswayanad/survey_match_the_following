@@ -6,7 +6,8 @@ class SurveyQuestion(models.Model):
 
     question_type = fields.Selection(
         selection_add=[('match', 'Match the Following')],
-        ondelete={'match': 'set default'}
+        ondelete={'match': 'set default'},
+        default='text_box'  # Add the default value to prevent RPC errors
     )
     match_pair_ids = fields.One2many('survey.match.pair', 'question_id', string='Match Pairs')
     match_correct_pairs_count = fields.Integer(compute='_compute_match_pairs_stats', string='Correct Pairs Count')

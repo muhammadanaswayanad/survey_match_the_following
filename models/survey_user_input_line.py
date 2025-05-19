@@ -8,11 +8,11 @@ class SurveyUserInputLine(models.Model):
         selection_add=[('match', 'Match')],
         ondelete={'match': 'cascade'}
     )
-    value_match_pairs = fields.Text('Match Pairs')
+    value_match_pairs = fields.Char('Match Answers')
     
-    @api.depends('value_match_pairs', 'question_id')
+    @api.depends('answer_type', 'value_match_pairs')
     def _compute_answer_score(self):
-        """Extend to compute score for match questions"""
+        """Override to compute score for match type questions"""
         super()._compute_answer_score()
         
         for line in self:
