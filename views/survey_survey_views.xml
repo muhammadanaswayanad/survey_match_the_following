@@ -16,7 +16,7 @@
     
     <!-- Also provide a template for displaying results -->
     <template id="question_match_result" inherit_id="survey.question_result">
-        <xpath expr="//t[@t-if='question.question_type in [\"textbox\", \"char_box\"]']" position="after">
+        <xpath expr="//t[@t-if='question.question_type in [&quot;textbox&quot;, &quot;char_box&quot;]']" position="after">
             <t t-if="question.question_type == 'match'">
                 <div class="match_question_result_container" t-att-data-question-id="question.id">
                     <!-- Result display logic will be added here -->
