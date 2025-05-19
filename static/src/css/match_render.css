@@ -1,0 +1,43 @@
+.match-container {
+    margin: 10px 0;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.match-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ddd;
+}
+
+.match-item-content {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    min-height: 40px;
+}
+
+.match-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.match-connector i {
+    color: #777;
+}
+
+.match-pair-row {
+    align-items: center;
+}
+
+/* Results page styling */
+.survey_result .match-answer-correct {
+    color: #28a745;
+}
+
+.survey_result .match-answer-incorrect {
+    color: #dc3545;
+}

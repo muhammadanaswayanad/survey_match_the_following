@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Match Question Template for Survey Form -->
+    <template id="match_question_content" inherit_id="survey.question_content">
+        <xpath expr="//div[hasclass('o_survey_form_content')]" position="inside">
+            <div t-if="question.question_type == 'match'" class="match_question_wrapper" t-att-data-name="question.id">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="match-container" t-att-data-question-id="question.id">
+                            <div class="match-header row">
+                                <div class="col-5 match-header-left text-center font-weight-bold">Items</div>
+                                <div class="col-2 match-header-middle text-center"></div>
+                                <div class="col-5 match-header-right text-center font-weight-bold">Matches</div>
+                            </div>
+                            
+                            <div class="match-pairs-container">
+                                <t t-set="left_options" t-value="question.match_pair_ids.mapped('left_option')"/>
+                                <t t-set="right_options" t-value="question.match_pair_ids.mapped('right_option')"/>
+                                
+                                <!-- Randomize right options for display -->
+                                <t t-set="shuffle_right_options" t-value="right_options.copy()"/>
+                                <t t-call="survey.random_shuffle" t-kwargs="{'seq': shuffle_right_options}"/>
+                                
+                                <t t-foreach="question.match_pair_ids" t-as="pair">
+                                    <div class="match-pair-row row mb-2" t-att-data-left-option="pair.left_option">
+                                        <div class="col-5 match-left-item">
+                                            <div class="match-item-content p-2 border rounded bg-light">
+                                                <span t-esc="pair.left_option"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 match-connector text-center">
+                                            <i class="fa fa-arrow-right"></i>
+                                        </div>
+                                        <div class="col-5 match-right-select">
+                                            <select class="form-control match-dropdown" 
+                                                    t-att-name="'match_%s_%s' % (question.id, pair.left_option)"
+                                                    t-att-data-left-option="pair.left_option">
+                                                <option value="">Select a match</option>
+                                                <t t-foreach="shuffle_right_options" t-as="right_option">
+                                                    <option t-att-value="right_option" t-esc="right_option"/>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </t>
+                                
+                                <!-- Hidden field to store JSON match pairs -->
+                                <input type="hidden" class="match_result_input" 
+                                       t-att-name="'match_result_%s' % question.id"
+                                       t-att-value="user_input_line and user_input_line.value_match_pairs or '{}'"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+    
+    <!-- Results Template -->
+    <template id="match_results" inherit_id="survey.result">
+        <xpath expr="//t[@t-elif="question.question_type == 'matrix'"]" position="after">
+            <t t-elif="question.question_type == 'match'">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <table class="table table-hover table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Left Item</th>
+                                    <th>Right Match</th>
+                                    <th t-if="survey_sudo.scoring_type != 'no_scoring'">Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="question.match_pair_ids" t-as="pair">
+                                    <td t-esc="pair.left_option"/>
+                                    <td t-esc="pair.right_option"/>
+                                    <td t-if="survey_sudo.scoring_type != 'no_scoring'">
+                                        <span class="badge badge-pill badge-success">
+                                            <i class="fa fa-check"/> Correct
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

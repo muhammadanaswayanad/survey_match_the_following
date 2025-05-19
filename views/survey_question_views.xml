@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="survey_question_form_match" model="ir.ui.view">
+        <field name="name">survey.question.form.inherit.match</field>
+        <field name="model">survey.question</field>
+        <field name="inherit_id" ref="survey.survey_question_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Match Pairs Tab -->
+            <xpath expr="//page[@name='options']" position="after">
+                <page name="match_pairs" string="Match Pairs" attrs="{'invisible': [('question_type', '!=', 'match')]}">
+                    <field name="match_pair_ids" widget="one2many">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="left_option"/>
+                            <field name="right_option"/>
+                        </tree>
+                    </field>
+                    <div class="alert alert-info mt-3" role="alert">
+                        <p>
+                            <i class="fa fa-info-circle"/> Add pairs of items to match. 
+                            Each left option can only be matched with one right option.
+                        </p>
+                    </div>
+                </page>
+            </xpath>
+            
+            <!-- Add Match selection to question_type field -->
+            <xpath expr="//field[@name='question_type']" position="attributes">
+                <attribute name="widget">radio</attribute>
+            </xpath>
+        </field>
+    </record>
+</record>
