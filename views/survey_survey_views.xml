@@ -1,44 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="survey_question_form_match_type" model="ir.ui.view">
-        <field name="name">survey.question.form.inherit.match.type</field>
-        <field name="model">survey.question</field>
-        <field name="inherit_id" ref="survey.survey_question_form_edit"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='match_pair_ids']" position="replace">
-                <field name="match_pair_ids" widget="one2many" attrs="{'invisible': [('question_type', '!=', 'match')]}">
-                    <tree editable="bottom">
-                        <field name="sequence" widget="handle"/>
-                        <field name="left_option"/>
-                        <field name="right_option"/>
-                    </tree>
-                </field>
-                <div class="alert alert-info mt-3" role="alert" attrs="{'invisible': [('question_type', '!=', 'match')]}">
-                    <p>
-                        <i class="fa fa-info-circle"/> Add pairs of items to match. 
-                        Each left option can only be matched with one right option.
-                    </p>
-                </div>
-            </xpath>
-        </field>
-    </record>
-    <!-- Extend the form view to show match details in survey analysis -->
-    <record id="survey_survey_view_form_match" model="ir.ui.view">
-        <field name="name">survey.survey.view.form.match</field>
-        <field name="model">survey.survey</field>
-        <field name="inherit_id" ref="survey.survey_survey_view_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='question_ids']/tree/field[@name='question_type']" position="attributes">
-                <attribute name="decoration-info" add="question_type == 'match'"/>
-            </xpath>
-        </field>
-    </record>
-    <!-- We're not inheriting from survey_question_form_edit as it doesn't exist in Odoo 17 -->
-    <!-- Instead, we'll modify the question templates when rendering the survey -->
+    <!-- Remove the problematic record that references non-existent survey.survey_question_form_edit -->
+    
+    <!-- Add a template for the frontend rendering of match questions -->
     <template id="question_match_template" inherit_id="survey.question">
         <xpath expr="//div[hasclass('js_question-wrapper')]" position="attributes">
             <attribute name="t-att-data-question-type">question.question_type</attribute>
         </xpath>
+        
         <xpath expr="//div[hasclass('js_question-wrapper')]/div" position="inside">
             <t t-if="question.question_type == 'match'">
                 <div class="match_question_container" t-att-data-question-id="question.id">
@@ -49,5 +18,21 @@
                 </div>
             </t>
         </xpath>
+    </template>
+    
+    <!-- Add a survey result template for displaying match question answers -->
+    <template id="match_question_result" inherit_id="survey.survey_fill_form_done">
+        <xpath expr="//div[hasclass('o_survey_form_content')]" position="inside">
+            <t t-call="survey_match_the_following.question_match_result"/>
+        </xpath>
+    </template>
+    
+    <template id="question_match_result">
+        <t t-foreach="survey.question_ids.filtered(lambda q: q.question_type == 'match')" t-as="question">
+            <!-- This will be implemented for showing match question results -->
+            <div class="match_question_result_container" t-att-data-question-id="question.id">
+                <!-- Result display will be handled separately -->
+            </div>
+        </t>
     </template>
 </odoo>
