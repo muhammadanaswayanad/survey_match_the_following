@@ -33,4 +33,21 @@
             </xpath>
         </field>
     </record>
+    <!-- We're not inheriting from survey_question_form_edit as it doesn't exist in Odoo 17 -->
+    <!-- Instead, we'll modify the question templates when rendering the survey -->
+    <template id="question_match_template" inherit_id="survey.question">
+        <xpath expr="//div[hasclass('js_question-wrapper')]" position="attributes">
+            <attribute name="t-att-data-question-type">question.question_type</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('js_question-wrapper')]/div" position="inside">
+            <t t-if="question.question_type == 'match'">
+                <div class="match_question_container" t-att-data-question-id="question.id">
+                    <div class="match-pairs-container">
+                        <!-- The pairs will be dynamically populated by JavaScript -->
+                    </div>
+                    <input type="hidden" name="match_result" class="match_result" />
+                </div>
+            </t>
+        </xpath>
+    </template>
 </odoo>
