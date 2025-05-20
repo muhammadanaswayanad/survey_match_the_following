@@ -20,7 +20,7 @@
         </field>
     </record>
 
-    <!-- Let's use a different approach by creating standalone template instead of inheritance -->
+    <!-- Create a standalone template for our match question content -->
     <template id="survey_match_question_content" name="Survey: Match Question">
         <div class="match_question_container mt-3" t-att-data-question-id="question.id">
             <div class="row">
@@ -37,7 +37,7 @@
                                 <tr>
                                     <td class="align-middle"><t t-esc="pair.left_text"/></td>
                                     <td>
-                                        <select name="match_answer_pair_left_id" 
+                                        <select t-att-name="'answer_%s_%s' % (question.id, pair.id)" 
                                                 t-att-data-left-id="pair.id"
                                                 class="form-select match-dropdown"
                                                 required="required">
@@ -58,10 +58,50 @@
         </div>
     </template>
 
-    <!-- Override the survey page to include our match question type -->
-    <template id="survey_page" inherit_id="survey.survey_page">
-        <xpath expr="//t[@t-elif='question.question_type == &quot;simple_choice&quot;']" position="after">
-            <t t-elif="question.question_type == 'match'">
+    <!-- Create an asset bundle for our match question JavaScript -->
+    <template id="assets_frontend" inherit_id="web.assets_frontend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript">
+                odoo.define('survey_match_the_following.question_handling', function (require) {
+                    "use strict";
+                    var publicWidget = require('web.public.widget');
+                    var SurveyFormWidget = publicWidget.registry.SurveyFormWidget;
+                    
+                    if (SurveyFormWidget) {
+                        SurveyFormWidget.include({
+                            _getAnswerValues: function () {
+                                var result = this._super.apply(this, arguments);
+                                
+                                // Handle match questions
+                                this.$('div.match_question_container').each(function () {
+                                    var $matchQuestionEl = $(this);
+                                    var questionId = $matchQuestionEl.data('question-id');
+                                    
+                                    $matchQuestionEl.find('select.match-dropdown').each(function() {
+                                        var $select = $(this);
+                                        var leftId = $select.data('left-id');
+                                        var rightValue = $select.val();
+                                        
+                                        if (rightValue) {
+                                            var inputName = 'answer_' + questionId + '_' + leftId;
+                                            result[inputName] = rightValue;
+                                        }
+                                    });
+                                });
+                                
+                                return result;
+                            }
+                        });
+                    }
+                });
+            </script>
+        </xpath>
+    </template>
+
+    <!-- Add our template to the survey question rendering using a controller -->
+    <template id="survey_question_hook" inherit_id="survey.question_container">
+        <xpath expr="//div[hasclass('o_survey_question_container')]" position="inside">
+            <t t-if="question.question_type == 'match'">
                 <t t-call="survey_match_the_following.survey_match_question_content"/>
             </t>
         </xpath>
