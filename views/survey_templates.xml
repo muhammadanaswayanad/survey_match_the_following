@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Template to render match question content -->
+    <template id="question_match_type" name="Match Question">
+        <div class="match_question_container mt-3" t-att-data-question-id="question.id">
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Left</th>
+                                <th>Right (Dropdown)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="question.match_pair_ids" t-as="pair">
+                                <tr>
+                                    <td class="align-middle"><t t-esc="pair.left_text"/></td>
+                                    <td>
+                                        <select t-att-name="'match_answer_' + str(pair.id)" 
+                                                t-att-data-left-id="pair.id"
+                                                class="form-select match-dropdown"
+                                                required="required">
+                                            <option value="">Select an answer</option>
+                                            <t t-foreach="question.match_pair_ids.sorted(key=lambda r: r.sequence)" t-as="right_pair">
+                                                <option t-att-value="right_pair.right_text">
+                                                    <t t-esc="right_pair.right_text"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <!-- Add assets for our JavaScript -->
+    <template id="assets_common" inherit_id="web.assets_common">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/survey_match_the_following/static/src/js/survey_match.js"/>
+        </xpath>
+    </template>
+</odoo>
