@@ -12,6 +12,11 @@
         'security/ir.model.access.csv',
         'views/survey_question_templates.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            '/survey_match_the_following/static/src/js/survey_match.js',
+        ],
+    },
     'installable': True,
     'application': False,
     'auto_install': False,

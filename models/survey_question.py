@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 class SurveyQuestion(models.Model):
     _inherit = 'survey.question'
@@ -18,6 +18,7 @@ class SurveyQuestion(models.Model):
 class SurveyMatchPair(models.Model):
     _name = 'survey.match.pair'
     _description = 'Matching Pair'
+    _order = 'sequence, id'
 
     question_id = fields.Many2one('survey.question', required=True, ondelete='cascade')
     left_text = fields.Char(required=True, string="Left Item")

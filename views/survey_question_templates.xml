@@ -24,25 +24,27 @@
     <template id="survey_question_match" inherit_id="survey.survey_question_content">
         <xpath expr="//div[contains(@class, 'o_survey_question_content')]" position="inside">
             <t t-if="question.question_type == 'match'">
-                <div class="match_question_container mt-3" t-att-data-question-id="question.id">
+                <div class="match_question_container mt-3" t-att-id="'match_question_%s' % question.id">
                     <div class="row">
                         <div class="col-12">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>Left</th>
-                                        <th>Right (Dropdown)</th>
+                                        <th class="w-50">Left</th>
+                                        <th class="w-50">Right (Dropdown)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="question.match_pair_ids" t-as="pair">
+                                    <t t-foreach="question.match_pair_ids.sorted(key=lambda p: p.sequence)" t-as="pair">
                                         <tr>
                                             <td class="align-middle"><t t-esc="pair.left_text"/></td>
                                             <td>
-                                                <select name="match_answer_pair_left_id" 
-                                                        t-att-data-left-id="pair.id"
-                                                        class="form-select match-dropdown"
-                                                        required="required">
+                                                <select 
+                                                    class="form-select match-dropdown" 
+                                                    t-att-name="'%s_%s' % (question.id, pair.id)"
+                                                    t-att-aria-label="'Match option for ' + pair.left_text"
+                                                    t-att-data-question-id="question.id"
+                                                    t-att-data-left-id="pair.id">
                                                     <option value="">Select an answer</option>
                                                     <t t-foreach="question.match_pair_ids.sorted(key=lambda r: r.sequence)" t-as="right_pair">
                                                         <option t-att-value="right_pair.id">
