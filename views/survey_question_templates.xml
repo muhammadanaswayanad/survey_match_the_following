@@ -21,8 +21,8 @@
     </record>
 
     <!-- Frontend display template -->
-    <template id="survey_question_match" inherit_id="survey.survey_question_content">
-        <xpath expr="//div[contains(@class, 'o_survey_question_content')]" position="inside">
+    <template id="question_content_data" inherit_id="survey.question">
+        <xpath expr="//div[hasclass('o_survey_question_content')]" position="inside">
             <t t-if="question.question_type == 'match'">
                 <div class="match_question_container mt-3" t-att-data-question-id="question.id">
                     <div class="row">
